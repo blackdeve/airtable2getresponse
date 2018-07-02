@@ -49,15 +49,13 @@ function postDataToGetresponse() {
 
     const headers = {
       'Content-Type': 'application/json',
-      // 'X-Auth-Token': 'api-key 84588a59741f7203de4b89a74a3dd5c3'
-      'X-Auth-Token': 'api-key 766178e0efc3a6df7e3e91f94545bbcc'
+      'X-Auth-Token': 'api-key 46374eecbb4807ce3997154dbe9f7c1a'
     };
     const body = {
       name: contact.full_name,
       email: contact.email,
       campaign: {
-        // campaignId: '6iPej'
-        campaignId: '6EImt'
+        campaignId: '6FQmX'
       }
     };
     const options = {
@@ -79,4 +77,4 @@ app.get('/', (req, res) => {
   res.send('Hello!')
 })
 
-app.listen(PORT, () => console.log('Example app listening on port ', PORT))
+app.listen(PORT, () => console.log('App listening on port ', PORT))
