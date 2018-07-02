@@ -7,7 +7,7 @@ var Airtable = require('airtable');
 var base = new Airtable({apiKey: 'keyJCRRojtU1jYCBB'}).base('appMm7V8XWifHqCja');
 
 var array = [];
-var fields = ['full_name', 'email'];
+var fields = ['full_name', 'email', 'continuation_url', 'cid'];
 
 function getDataFromAirtable() {
   // Clear current fetched data array
@@ -54,6 +54,13 @@ function postDataToGetresponse() {
     const body = {
       name: contact.full_name,
       email: contact.email,
+      customFieldValues: [{
+        customFieldId: 'NWLAP',
+        value: contact.continuation_url
+      }, {
+        customFieldId: 'NWuC7',
+        value: contact.cid
+      }],
       campaign: {
         campaignId: '6FQmX'
       }
