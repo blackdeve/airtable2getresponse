@@ -81,7 +81,7 @@ getDataFromAirtable();
 setInterval(getDataFromAirtable, 1000 * 60);
 
 app.get('/', (req, res) => {
-  res.send('Hello!')
+  res.send('v1.0')
 })
 
 app.listen(PORT, () => console.log('App listening on port ', PORT))
