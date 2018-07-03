@@ -7,7 +7,7 @@ var Airtable = require('airtable');
 var base = new Airtable({apiKey: 'keyJCRRojtU1jYCBB'}).base('appMm7V8XWifHqCja');
 
 var array = [];
-var fields = ['full_name', 'email', 'continuation_url', 'cid'];
+var fields = ['full_name', 'email', 'continuation_url', 'cid', 'country', 'state', 'IP'];
 
 function getDataFromAirtable() {
   // Clear current fetched data array
@@ -44,35 +44,76 @@ function getDataFromAirtable() {
 
 function postDataToGetresponse() {
   console.log('Post data to Getresponse')
-  for (var idx in array) {
-    const contact = array[idx];
+  postContact(0);
+}
 
-    const headers = {
-      'Content-Type': 'application/json',
-      'X-Auth-Token': 'api-key 46374eecbb4807ce3997154dbe9f7c1a'
-    };
-    const body = {
-      name: contact.full_name,
-      email: contact.email,
-      customFieldValues: [{
-        customFieldId: 'NWLAP',
-        value: contact.continuation_url
-      }, {
-        customFieldId: 'NWuC7',
-        value: contact.cid
-      }],
-      campaign: {
-        campaignId: '6FQmX'
-      }
-    };
-    const options = {
-      headers: headers,
-      body: JSON.stringify(body)
-    };
-
-    request.post('https://api.getresponse.com/v3/contacts',
-      options);
+function postContact(idx) {
+  if (idx === array.length) {
+    return;
   }
+
+  const contact = array[idx];
+
+  const headers = {
+    'Content-Type': 'application/json',
+    'X-Auth-Token': 'api-key 46374eecbb4807ce3997154dbe9f7c1a'
+  };
+  var customFieldValues = [];
+  if (contact.continuation_url !== '') {
+    customFieldValues.push({
+      customFieldId: 'NWLAP',
+      value: [
+        contact.continuation_url
+      ]
+    });
+  }
+  if (contact.cid !== '') {
+    customFieldValues.push({
+      customFieldId: 'NWuC7',
+      value: [
+        contact.cid
+      ]
+    });
+  }
+  if (contact.country !== '') {
+    customFieldValues.push({
+      customFieldId: 'NyvWw',
+      value: [
+        contact.country
+      ]
+    });
+  }
+  if (contact.state !== '') {
+    customFieldValues.push({
+      customFieldId: 'NyvBo',
+      value: [
+        contact.state
+      ]
+    });
+  }
+  const body = {
+    name: contact.full_name,
+    email: contact.email,
+    campaign: {
+      campaignId: '6FQmX'
+    },
+  };
+  if (customFieldValues.length !== 0) {
+    body.customFieldValues = customFieldValues;
+  }
+  if (contact.IP !== '') {
+    body.ipAddress = contact.IP;
+  }
+  // console.log(JSON.stringify(body))
+  // console.log(' ')
+  const options = {
+    headers: headers,
+    body: JSON.stringify(body)
+  };
+
+  request.post('https://api.getresponse.com/v3/contacts', options);
+
+  setTimeout(postContact, 200, idx + 1);
 }
 
 getDataFromAirtable();
@@ -81,7 +122,7 @@ getDataFromAirtable();
 setInterval(getDataFromAirtable, 1000 * 60);
 
 app.get('/', (req, res) => {
-  res.send('v1.0')
+  res.send('v1.1')
 })
 
 app.listen(PORT, () => console.log('App listening on port ', PORT))
